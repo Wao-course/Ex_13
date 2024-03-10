@@ -14,7 +14,8 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5184",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "CONNECTION_STRING": "Server=db-recommendations,1433;Database=master;User=sa;Password=suchSecureVeryWordSoPassW0w!;TrustServerCertificate=True"
       }
     },
     "https": {
@@ -23,14 +24,16 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7122;http://localhost:5184",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "CONNECTION_STRING": "Server=db-recommendations,1433;Database=master;User=sa;Password=suchSecureVeryWordSoPassW0w!;TrustServerCertificate=True"
       }
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "CONNECTION_STRING": "Server=db-recommendations,1433;Database=master;User=sa;Password=suchSecureVeryWordSoPassW0w!;TrustServerCertificate=True"
       }
     }
   }
