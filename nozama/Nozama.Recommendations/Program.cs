@@ -12,7 +12,15 @@ var app = builder.Build();
 // This approach should not be used in production. See https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying
 using(var scope = app.Services.CreateScope()) {
     var db = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
-    db.Database.Migrate();
+    try
+    {
+        db.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        // Log the exception or handle it gracefully
+        Console.WriteLine($"Error occurred during database migration: {ex.Message}");
+    }
 }
 
 app.MapGet("/", () => "Hello World!");

@@ -9,4 +9,4 @@ services:
       context: .
       dockerfile: Nozama.Recommendations/Dockerfile
     ports:
-      - 5100:5100
+      - 5120:5120
