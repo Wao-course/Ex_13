@@ -35,4 +35,23 @@ public class CatalogController : ControllerBase
     await _dbContext.SaveChangesAsync();
     return Created($"{product.ProductId}", product);
   }
+
+[HttpGet("search")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+public async Task<ActionResult<IEnumerable<Product>>> SearchByName([FromQuery] string name)
+{
+    if (string.IsNullOrWhiteSpace(name))
+    {
+        return BadRequest("Search term cannot be empty.");
+    }
+
+    var products = await _dbContext.Products
+        .AsNoTracking()
+        .Where(p => p.Name.Contains(name))
+        .ToListAsync();
+
+    return Ok(products);
+}
+
 }
