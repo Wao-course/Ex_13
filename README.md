@@ -12,12 +12,40 @@ The solution holds the following projects, which represents a microservice in th
 
 ## Get everything up and running
 This first thing to do is to check the log: Why are `Nozama.Recommendations` throwing exceptions, and how can we fix this? (spoiler alert: We'll dive deeper in the next lecture, so just hack it for now)
+> to get the app runing we can use the docker-compose file located in the root of the solution.
+the docker file create a network and run the 3 services in the solution. To run the services we can use the following command:
+```bash
+docker-compose -f docker-compose.debug.yml build
+docker-compose -f docker-compose.debug.yml up -d
+```
 
 ## Search endpoint in product catalog
 Implement a search endpoint in `Nozama.ProductCatalog`
 - You should use query strings for search values[^1]
 - You decide for what to search for: `Name`, `Description`, `ProductId`, etc. 
 - Add a couple of products and test it out!
+
+```csharp	
+[HttpGet("search")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+public async Task<ActionResult<IEnumerable<Product>>> SearchByName([FromQuery] string name)
+{
+    if (string.IsNullOrWhiteSpace(name))
+    {
+        return BadRequest("Search term cannot be empty.");
+    }
+
+    var products = await _dbContext.Products
+        .AsNoTracking()
+        .Where(p => p.Name.Contains(name))
+        .ToListAsync();
+
+    return Ok(products);
+}
+
+```
+
 
 ## Add a stats endpoint
 Implement the following in `Nozama.Recommendations`
