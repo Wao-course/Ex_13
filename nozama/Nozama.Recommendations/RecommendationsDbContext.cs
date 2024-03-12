@@ -10,7 +10,6 @@ public class RecommendationsDbContext : DbContext {
   public DbSet<Recommendation> Recommendations => Set<Recommendation>();
   // Inside RecommendationsDbContext class
   public DbSet<StatsEntry> Stats => Set<StatsEntry>();
-  public DbSet<Search> Searches => Set<Search>();
 
 
 }

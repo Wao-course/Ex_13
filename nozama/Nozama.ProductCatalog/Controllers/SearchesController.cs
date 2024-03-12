@@ -3,16 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Nozama.Model; // Make sure to import the appropriate namespace for your models
+using Nozama.ProductCatalog.Data; 
 
-namespace Nozama.Recommendations.Controllers
+namespace Nozama.ProductCatalog.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class SearchController : ControllerBase
     {
-        private readonly RecommendationsDbContext _dbContext;
+        private readonly ProductCatalogDbContext _dbContext;
 
-        public SearchController(RecommendationsDbContext dbContext)
+        public SearchController(ProductCatalogDbContext dbContext)
         {
             _dbContext = dbContext;
         }

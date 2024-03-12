@@ -40,10 +40,11 @@ public class StatsController : ControllerBase
   }
 
    [HttpGet("totallookups")]
-        public ActionResult<int> GetTotalProductLookups()
-        {
-            var totalLookups = _productLookupService.CalculateTotalProductLookups();
-            return Ok(totalLookups);
-        }
+    public ActionResult<int> GetTotalProductLookups()
+    {
+        var totalLookups = _productLookupService.CalculateTotalProductLookups();
+        return Ok(totalLookups);
+    }
+    
   
 }

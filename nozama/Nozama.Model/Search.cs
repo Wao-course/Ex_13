@@ -9,4 +9,5 @@ public class Search
     public int Id { get; set; }
     public string Term { get; set; }
     public DateTimeOffset Timestamp { get; set; }
+    
 }

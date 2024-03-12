@@ -13,4 +13,6 @@ public class ProductCatalogDbContext : DbContext
   public DbSet<Product> Products => Set<Product>();
   public DbSet<Recommendation> Recommendations => Set<Recommendation>();
   public DbSet<StatsEntry> Stats => Set<StatsEntry>();
+  public DbSet<Search> Searches => Set<Search>();
+
 }
