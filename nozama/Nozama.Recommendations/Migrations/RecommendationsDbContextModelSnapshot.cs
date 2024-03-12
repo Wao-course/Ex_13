@@ -40,7 +40,12 @@ namespace Nozama.Recommendations.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("StatsEntryId")
+                        .HasColumnType("int");
+
                     b.HasKey("ProductId");
+
+                    b.HasIndex("StatsEntryId");
 
                     b.ToTable("Product");
                 });
@@ -61,6 +66,30 @@ namespace Nozama.Recommendations.Migrations
                     b.ToTable("Recommendations");
                 });
 
+            modelBuilder.Entity("Nozama.Model.StatsEntry", b =>
+                {
+                    b.Property<int>("StatsEntryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatsEntryId"));
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Term")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("Timestamp")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("StatsEntryId");
+
+                    b.ToTable("Stats");
+                });
+
             modelBuilder.Entity("ProductRecommendation", b =>
                 {
                     b.Property<int>("ProductsProductId")
@@ -76,6 +105,13 @@ namespace Nozama.Recommendations.Migrations
                     b.ToTable("ProductRecommendation");
                 });
 
+            modelBuilder.Entity("Nozama.Model.Product", b =>
+                {
+                    b.HasOne("Nozama.Model.StatsEntry", null)
+                        .WithMany("Products")
+                        .HasForeignKey("StatsEntryId");
+                });
+
             modelBuilder.Entity("ProductRecommendation", b =>
                 {
                     b.HasOne("Nozama.Model.Product", null)
@@ -89,6 +125,11 @@ namespace Nozama.Recommendations.Migrations
                         .HasForeignKey("RecommendationsRecommendationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Nozama.Model.StatsEntry", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

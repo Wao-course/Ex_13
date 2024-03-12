@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Nozama.ProductCatalog.Data;
 
 #nullable disable
 
-namespace Nozama.ProductCatalog.Migrations
+namespace Nozama.Recommendations.Migrations
 {
-    [DbContext(typeof(ProductCatalogDbContext))]
-    partial class ProductCatalogDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(RecommendationsDbContext))]
+    [Migration("20240312191400_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +50,7 @@ namespace Nozama.ProductCatalog.Migrations
 
                     b.HasIndex("StatsEntryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Nozama.Model.Recommendation", b =>
@@ -65,26 +67,6 @@ namespace Nozama.ProductCatalog.Migrations
                     b.HasKey("RecommendationId");
 
                     b.ToTable("Recommendations");
-                });
-
-            modelBuilder.Entity("Nozama.Model.Search", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Term")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Searches");
                 });
 
             modelBuilder.Entity("Nozama.Model.StatsEntry", b =>
