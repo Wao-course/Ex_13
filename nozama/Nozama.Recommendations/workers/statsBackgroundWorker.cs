@@ -12,18 +12,22 @@ public class StatsBackgroundWorker : BackgroundService
     private readonly ILogger<StatsBackgroundWorker> _logger;
     private readonly HttpClient _httpClient;
     private readonly RecommendationsDbContext _dbContext;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public StatsBackgroundWorker(ILogger<StatsBackgroundWorker> logger, HttpClient httpClient, RecommendationsDbContext dbContext)
+    public StatsBackgroundWorker(ILogger<StatsBackgroundWorker> logger, HttpClient httpClient, IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
         _httpClient = httpClient;
-        _dbContext = dbContext;
+        _scopeFactory = scopeFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
+
             try
             {
                 // Make GET request to /stats endpoint of product catalog service
