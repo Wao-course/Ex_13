@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using Nozama.ProductCatalog.Services;
 using Nozama.ProductCatalog.Data;
 using Nozama.Model;
-
 namespace Nozama.ProductCatalog.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class StatsController : ControllerBase
 {
+  private readonly ProductLookupService _productLookupService;
 
   private readonly ProductCatalogDbContext _dbContext;
   public StatsController(ProductCatalogDbContext dbContext)
@@ -24,7 +24,9 @@ public class StatsController : ControllerBase
       Products = new List<Product>(),
       Timestamp = DateTimeOffset.Now,
     });
-  }  [HttpPost]
+  } 
+   
+  [HttpPost]
   [ProducesResponseType(StatusCodes.Status201Created)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
   public async Task<ActionResult<Recommendation>> Post(Recommendation recommendation)
@@ -36,4 +38,12 @@ public class StatsController : ControllerBase
     await _dbContext.SaveChangesAsync();
     return Created($"{recommendation.RecommendationId}", recommendation);
   }
+
+   [HttpGet("totallookups")]
+        public ActionResult<int> GetTotalProductLookups()
+        {
+            var totalLookups = _productLookupService.CalculateTotalProductLookups();
+            return Ok(totalLookups);
+        }
+  
 }

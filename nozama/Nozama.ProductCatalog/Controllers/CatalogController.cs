@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using Nozama.ProductCatalog.Data;
 using Nozama.Model;
 
@@ -12,10 +11,11 @@ public class CatalogController : ControllerBase
 {
 
   private readonly ProductCatalogDbContext _dbContext;
-
-  public CatalogController(ProductCatalogDbContext dbContext) 
+  private readonly ILogger<CatalogController> _logger;
+  public CatalogController(ProductCatalogDbContext dbContext, ILogger<CatalogController> logger) 
   {
     _dbContext = dbContext;
+    _logger = logger;
   }
 
   [HttpGet]
@@ -36,22 +36,30 @@ public class CatalogController : ControllerBase
     return Created($"{product.ProductId}", product);
   }
 
-[HttpGet("search")]
-[ProducesResponseType(StatusCodes.Status200OK)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-public async Task<ActionResult<IEnumerable<Product>>> SearchByName([FromQuery] string name)
-{
-    if (string.IsNullOrWhiteSpace(name))
-    {
-        return BadRequest("Search term cannot be empty.");
-    }
+  [HttpGet("search")]
+  [ProducesResponseType(StatusCodes.Status200OK)]
+  [ProducesResponseType(StatusCodes.Status400BadRequest)]
+  public async Task<ActionResult<IEnumerable<Product>>> SearchByName([FromQuery] string name)
+  {
+      if (string.IsNullOrWhiteSpace(name))
+      {
+          return BadRequest("Search term cannot be empty.");
+      }
 
-    var products = await _dbContext.Products
-        .AsNoTracking()
-        .Where(p => p.Name.Contains(name))
-        .ToListAsync();
+      // Log the search query
+      LogSearch(name);
 
-    return Ok(products);
-}
+      var products = await _dbContext.Products
+          .AsNoTracking()
+          .Where(p => p.Name.Contains(name))
+          .ToListAsync();
 
+      return Ok(products);
+  }
+
+  private void LogSearch(string searchTerm)
+  {
+      // logic to log the search query, such as writing to a log file, database, or external service
+      _logger.LogInformation("Search query: {searchTerm}", searchTerm);
+  }
 }
