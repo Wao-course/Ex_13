@@ -90,3 +90,12 @@ Implement the following in `Nozama.Recommendations`
     - **Synchronous Communication**: Services communicate directly with each other via request-response mechanisms like HTTP. This includes RESTful APIs and RPC (Remote Procedure Call).
     - **Asynchronous Communication**: Services communicate indirectly through message brokers or event buses. Examples include using messaging queues or publish-subscribe patterns.
     - **Event-Driven Communication**: Services communicate by reacting to events or changes in state. This style is characterized by event sourcing, where events represent changes in system state and are propagated to interested parties asynchronously.
+
+
+## Issues log
+
+- Use ```5200/swagger/index.html``` to access the swagger documentation for the product catalog service. 
+
+- the search list returnig empty list when the search term is not found.
+
+- The microsoft.EntityFrameworkCore.Tools.DotNet package is giving error use ```dotnet list package``` to check the version of the package and restore if it fails with the following command ```dotnet restore```

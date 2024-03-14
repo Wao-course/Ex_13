@@ -57,9 +57,19 @@ public class CatalogController : ControllerBase
       return Ok(products);
   }
 
-  private void LogSearch(string searchTerm)
+  public async Task LogSearch(string searchTerm)
   {
-      // logic to log the search query, such as writing to a log file, database, or external service
-      _logger.LogInformation("Search query: {searchTerm}", searchTerm);
+      // Create a new Search object with the search term and timestamp
+      var search = new Search
+      {
+          Term = searchTerm,
+          Timestamp = DateTimeOffset.Now
+      };
+
+      // Add the search object to the database context
+      _dbContext.Searches.Add(search);
+
+      // Save changes to the database asynchronously
+      await _dbContext.SaveChangesAsync();
   }
 }
