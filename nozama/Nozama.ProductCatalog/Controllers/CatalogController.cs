@@ -46,9 +46,16 @@ public class CatalogController : ControllerBase
           return BadRequest("Search term cannot be empty.");
       }
 
-      // Log the search query
-      LogSearch(name);
-
+      try 
+      {
+          // Log the search query
+          await LogSearch(name);
+      }
+      catch (Exception ex)
+      {
+          _logger.LogError(ex, "Failed to log search term");
+      }
+      
       var products = await _dbContext.Products
           .AsNoTracking()
           .Where(p => p.Name.Contains(name))

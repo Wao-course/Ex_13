@@ -18,13 +18,14 @@ namespace Nozama.ProductCatalog.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpGet("latest")]
+        [HttpGet("latestSearches")]
         public async Task<ActionResult<IEnumerable<Search>>> GetLatestSearches()
         {
-            // Fetch the 100 latest searches ordered by search timestamp
             var latestSearches = await _dbContext.Searches
-                .OrderByDescending(s => s.Timestamp)
-                .Take(100)
+                .GroupBy(s => s.Term) // Group by search term
+                .OrderByDescending(g => g.Count()) // Order by the count of each term (i.e., number of occurrences)
+                .Take(100) // Take the top 100 terms
+                .SelectMany(g => g) // Flatten the grouped results to get individual search records
                 .ToListAsync();
 
             return Ok(latestSearches);
