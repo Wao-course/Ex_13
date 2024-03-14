@@ -57,3 +57,36 @@ Implement the following in `Nozama.Recommendations`
 - https://learn.microsoft.com/en-us/aspnet/core/web-api/action-return-types
 
 [^1]: https://learn.microsoft.com/en-us/aspnet/core/mvc/models/model-binding
+
+
+## Questions
+
+- What are the six characteristics of microservices?
+1. The six characteristics of microservices are:
+   - **Componentization via Services**: The application is composed of loosely coupled services.
+   - **Organized around Business Capabilities**: Each service corresponds to a specific business function or capability.
+   - **Products, not Projects**: Services are long-lived and evolve over time.
+   - **Smart Endpoints and Dumb Pipes**: Services implement logic while communication between them is kept simple.
+   - **Decentralized Data Management**: Each service manages its own database or data storage.
+   - **Infrastructure Automation**: Emphasizes the use of automation for deployment, scaling, and management.
+
+- Should you always go with microservices when starting a new project?
+
+    > Whether to use microservices for a new project depends on various factors such as project complexity, team expertise, scalability requirements, and expected changes over time. While microservices offer benefits like scalability and flexibility, they also introduce complexity and overhead. It's crucial to assess these factors and consider if the benefits outweigh the challenges for your specific project.
+
+- How does the .NET Core framework support the implementation of microservices?
+    
+3. .NET Core framework supports microservices implementation through features such as:
+   - **Modularity**: .NET Core allows you to create modular applications, which align with microservices architecture by enabling the development of independent services.
+   - **Cross-Platform Compatibility**: .NET Core supports deployment on various platforms, facilitating microservices deployment in diverse environments.
+   - **Containerization Support**: .NET Core seamlessly integrates with containerization technologies like Docker, simplifying the deployment and management of microservices.
+   - **RESTful APIs**: .NET Core provides robust support for building RESTful APIs, which are commonly used for communication between microservices.
+
+- How do we identify business and technical capabilities?
+    > Business capabilities represent the functions or activities a business performs to achieve its objectives. These can be identified through analysis of business processes, value streams, and stakeholder requirements. Technical capabilities, on the other hand, refer to the technological competencies required to support and enable the business capabilities. They include aspects such as software architecture, infrastructure, and integration mechanisms.
+
+- What are the three main communication styles for collaboration between microservices?
+    5. The three main communication styles for collaboration between microservices are:
+    - **Synchronous Communication**: Services communicate directly with each other via request-response mechanisms like HTTP. This includes RESTful APIs and RPC (Remote Procedure Call).
+    - **Asynchronous Communication**: Services communicate indirectly through message brokers or event buses. Examples include using messaging queues or publish-subscribe patterns.
+    - **Event-Driven Communication**: Services communicate by reacting to events or changes in state. This style is characterized by event sourcing, where events represent changes in system state and are propagated to interested parties asynchronously.
