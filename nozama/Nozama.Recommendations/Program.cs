@@ -24,6 +24,6 @@ using(var scope = app.Services.CreateScope()) {
     }
 }
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "Main page of the Recommendations service");
 
 app.Run();

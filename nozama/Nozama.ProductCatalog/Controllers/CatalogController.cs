@@ -55,7 +55,7 @@ public class CatalogController : ControllerBase
       {
           _logger.LogError(ex, "Failed to log search term");
       }
-      
+
       var products = await _dbContext.Products
           .AsNoTracking()
           .Where(p => p.Name.Contains(name))
@@ -63,7 +63,8 @@ public class CatalogController : ControllerBase
 
       return Ok(products);
   }
-
+  
+  [NonAction]
   public async Task LogSearch(string searchTerm)
   {
       // Create a new Search object with the search term and timestamp

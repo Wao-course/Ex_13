@@ -22,13 +22,17 @@ namespace Nozama.ProductCatalog.Controllers
         public async Task<ActionResult<IEnumerable<Search>>> GetLatestSearches()
         {
             var latestSearches = await _dbContext.Searches
-                .GroupBy(s => s.Term) // Group by search term
-                .OrderByDescending(g => g.Count()) // Order by the count of each term (i.e., number of occurrences)
-                .Take(100) // Take the top 100 terms
-                .SelectMany(g => g) // Flatten the grouped results to get individual search records
+                .GroupBy(s => s.Term)
+                .Select(g => new { Term = g.Key, Count = g.Count() }) // Calculate the count of elements in each group
+                .OrderByDescending(g => g.Count) // Order by the count of elements in each group
+                .Take(100)
                 .ToListAsync();
 
-            return Ok(latestSearches);
+            // Flatten the grouped results to get individual search records
+            var flattenedSearches = latestSearches.SelectMany(g => _dbContext.Searches.Where(s => s.Term == g.Term)).ToList();
+
+            return Ok(flattenedSearches);
         }
+
     }
 }
