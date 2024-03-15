@@ -1,48 +1,46 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nozama.Model;
+using Nozama.Recommendations;
 using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq; // Add this using directive for JObject
+using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore; // Add this using directive for JObject
 
 public class StatsBackgroundWorker : BackgroundService
 {
+
+    private readonly ProductCatalogService _service;
+
     private readonly ILogger<StatsBackgroundWorker> _logger;
-    private readonly HttpClient _httpClient;
-    private readonly RecommendationsDbContext _dbContext;
+    private readonly IDbContextFactory<RecommendationsDbContext>? _dbContextFactory;
     private readonly IServiceScopeFactory _scopeFactory;
 
-    public StatsBackgroundWorker(ILogger<StatsBackgroundWorker> logger, HttpClient httpClient, IServiceScopeFactory scopeFactory)
+    public StatsBackgroundWorker(ILogger<StatsBackgroundWorker> logger, ProductCatalogService service, IDbContextFactory<RecommendationsDbContext> dbContext, IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
-        _httpClient = httpClient;
+        _service = service;
+        _dbContextFactory = dbContext;
         _scopeFactory = scopeFactory;
     }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
-
             try
             {
-                // Make GET request to /stats endpoint of product catalog service
-                var response = await _httpClient.GetAsync("http://productcatalog/stats", stoppingToken);
-                response.EnsureSuccessStatusCode();
-
                 // Process stats data
-                var statsData = await response.Content.ReadAsStringAsync();
-                
+                var statsData = await _service.GetStats();
+
                 // Parse stats data and extract relevant information
                 var statsEntry = ParseStatsData(statsData);
 
                 // Save processed stats data to database
-                _dbContext.Stats.Add(statsEntry);
-                await _dbContext.SaveChangesAsync();
+                var dbContext = _dbContextFactory.CreateDbContext();
+                dbContext.Stats.Add(statsEntry);
+                await dbContext.SaveChangesAsync();
 
                 // Delay for 1600 milliseconds
                 await Task.Delay(1600, stoppingToken);
@@ -54,27 +52,46 @@ public class StatsBackgroundWorker : BackgroundService
         }
     }
 
-    private StatsEntry ParseStatsData(string statsData)
+    private StatsEntry ParseStatsData(IEnumerable<StatsEntry> statsData)
     {
-        // Deserialize the JSON string to extract relevant information
-        var jsonObject = JObject.Parse(statsData);
+        // Initialize variables to hold extracted information
+        List<Product> products = new List<Product>();
+        string? term = null;
+        DateTimeOffset timestamp = DateTimeOffset.MinValue;
 
-        // Extract values for each property from the JSON object
-        var data = jsonObject["data"]?.ToString();
-        var products = jsonObject["products"]?.ToObject<List<Product>>()  ?? new List<Product>();
-        var term = jsonObject["term"]?.ToString() ?? string.Empty;
-        var timestamp = jsonObject["timestamp"]?.ToObject<DateTimeOffset>() ?? DateTimeOffset.UtcNow;
-
-        // Create a new StatsEntry object with extracted values
-        var statsEntry = new StatsEntry
+        // Iterate through each StatsEntry object in the collection
+        foreach (var statsEntry in statsData)
         {
-            Data = statsData, // Assuming statsData contains the raw JSON data
+            // Extract products from the current StatsEntry object
+            if (statsEntry.Products != null)
+            {
+                products.AddRange(statsEntry.Products);
+            }
+
+            // Extract term from the current StatsEntry object
+            if (!string.IsNullOrEmpty(statsEntry.Term))
+            {
+                term = statsEntry.Term;
+            }
+
+            // Extract timestamp from the current StatsEntry object
+            if (statsEntry.Timestamp > timestamp)
+            {
+                timestamp = statsEntry.Timestamp;
+            }
+        }
+
+        // Create a new StatsEntry object with the extracted information
+        var parsedStatsEntry = new StatsEntry
+        {
             Products = products,
             Term = term,
-            Timestamp = DateTimeOffset.Now // Update this to use the correct timestamp, if available
+            Timestamp = timestamp
         };
 
-
-        return statsEntry;
+        return parsedStatsEntry;
     }
+
+
+
 }

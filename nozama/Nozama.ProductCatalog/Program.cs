@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Nozama.ProductCatalog.Data;
+using Nozama.ProductCatalog.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,7 @@ builder.Services.AddDbContext<ProductCatalogDbContext>(
     options => options.UseSqlServer(Environment.GetEnvironmentVariable("CONNECTION_STRING"))
 );
 builder.Services.AddControllers();
+builder.Services.AddHttpClient<ProductLookupService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

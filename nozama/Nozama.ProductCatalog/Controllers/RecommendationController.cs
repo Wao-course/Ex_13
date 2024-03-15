@@ -36,6 +36,6 @@ public class RecommendationController : ControllerBase
   }
 
   public class RecommendationRequestDTO {
-    public List<int> ProductIds { get; set; }
+    public List<int>? ProductIds { get; set; }
   }
 }
