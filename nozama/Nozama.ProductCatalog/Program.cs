@@ -9,8 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ProductCatalogDbContext>(
     options => options.UseSqlServer(Environment.GetEnvironmentVariable("CONNECTION_STRING"))
 );
+
 builder.Services.AddControllers();
-builder.Services.AddHttpClient<ProductLookupService>();
+builder.Services.AddScoped<ProductLookupService>(); // AddScoped is just one option; use the appropriate lifetime for your scenario
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

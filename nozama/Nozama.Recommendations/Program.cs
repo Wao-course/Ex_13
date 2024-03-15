@@ -4,9 +4,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient<ProductCatalogService>();
 builder.Services.AddHostedService<LastestSearchesBackgroundWorker>();
 builder.Services.AddHostedService<StatsBackgroundWorker>();
-builder.Services.AddDbContext<RecommendationsDbContext>(
-    options => options.UseSqlServer(Environment.GetEnvironmentVariable("CONNECTION_STRING"))
-);
+// builder.Services.AddDbContext<RecommendationsDbContext>(
+//     options => options.UseSqlServer(Environment.GetEnvironmentVariable("CONNECTION_STRING"))
+// );
+builder.Services.AddDbContextFactory<RecommendationsDbContext>(
+    options => options.UseSqlServer(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
+
 
 var app = builder.Build();
 

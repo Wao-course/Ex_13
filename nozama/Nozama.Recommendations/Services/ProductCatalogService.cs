@@ -3,6 +3,7 @@ using Nozama.Model;
 public class ProductCatalogService
 {
   private readonly HttpClient _httpClient;
+
   public ProductCatalogService(HttpClient httpClient)
   {
     _httpClient = httpClient;

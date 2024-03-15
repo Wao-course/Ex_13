@@ -16,6 +16,7 @@ public class StatsBackgroundWorker : BackgroundService
 
     private readonly ILogger<StatsBackgroundWorker> _logger;
     private readonly IDbContextFactory<RecommendationsDbContext>? _dbContextFactory;
+    
     private readonly IServiceScopeFactory _scopeFactory;
 
     public StatsBackgroundWorker(ILogger<StatsBackgroundWorker> logger, ProductCatalogService service, IDbContextFactory<RecommendationsDbContext> dbContext, IServiceScopeFactory scopeFactory)
