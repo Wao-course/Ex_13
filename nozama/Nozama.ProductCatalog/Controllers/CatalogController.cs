@@ -18,14 +18,23 @@ public class CatalogController : ControllerBase
     _logger = logger;
   }
 
-  [HttpGet]
+   [HttpGet]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-  public async Task<ActionResult<IEnumerable<Product>>> Get() 
+  public async Task<ActionResult<IEnumerable<Product>>> Get([FromQuery] string name = "") 
   {
-    var products = await _dbContext.Products.AsNoTracking().ToListAsync();
-    return Ok(products);
+    var result = await _dbContext.Products.Where(p => p.Name.Contains(name)).ToListAsync();
+    if(!string.IsNullOrEmpty(name.Trim())) {
+      await _dbContext.Stats.AddAsync(new StatsEntry {
+        Products = result,
+        Term = name,
+        Timestamp = DateTimeOffset.UtcNow,
+      });
+    }
+    await _dbContext.SaveChangesAsync();
+    return Ok(result);
   }
+
 
   [HttpPost]
   [ProducesResponseType(StatusCodes.Status201Created)]

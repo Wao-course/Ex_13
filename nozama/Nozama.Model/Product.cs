@@ -9,4 +9,7 @@ public class Product {
   public decimal Price { get; set; }
   [JsonIgnore]
   public ICollection<Recommendation> Recommendations { get; set; } = new List<Recommendation>();
+  [JsonIgnore]
+  public ICollection<StatsEntry> StatsEntries { get; set; } = new List<StatsEntry>();
+
 }

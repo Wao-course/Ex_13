@@ -41,12 +41,7 @@ namespace Nozama.ProductCatalog.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("StatsEntryId")
-                        .HasColumnType("int");
-
                     b.HasKey("ProductId");
-
-                    b.HasIndex("StatsEntryId");
 
                     b.ToTable("Products");
                 });
@@ -76,7 +71,6 @@ namespace Nozama.ProductCatalog.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Term")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("Timestamp")
@@ -96,11 +90,9 @@ namespace Nozama.ProductCatalog.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatsEntryId"));
 
                     b.Property<string>("Data")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Term")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("Timestamp")
@@ -126,11 +118,19 @@ namespace Nozama.ProductCatalog.Migrations
                     b.ToTable("ProductRecommendation");
                 });
 
-            modelBuilder.Entity("Nozama.Model.Product", b =>
+            modelBuilder.Entity("ProductStatsEntry", b =>
                 {
-                    b.HasOne("Nozama.Model.StatsEntry", null)
-                        .WithMany("Products")
-                        .HasForeignKey("StatsEntryId");
+                    b.Property<int>("ProductsProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatsEntriesStatsEntryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductsProductId", "StatsEntriesStatsEntryId");
+
+                    b.HasIndex("StatsEntriesStatsEntryId");
+
+                    b.ToTable("ProductStatsEntry");
                 });
 
             modelBuilder.Entity("ProductRecommendation", b =>
@@ -148,9 +148,19 @@ namespace Nozama.ProductCatalog.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Nozama.Model.StatsEntry", b =>
+            modelBuilder.Entity("ProductStatsEntry", b =>
                 {
-                    b.Navigation("Products");
+                    b.HasOne("Nozama.Model.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Nozama.Model.StatsEntry", null)
+                        .WithMany()
+                        .HasForeignKey("StatsEntriesStatsEntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

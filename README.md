@@ -53,6 +53,16 @@ Implement the following in `Nozama.Recommendations`
 - Add a service, that calculate the total number lookups for products (think about which microservice should implement this service)
 - Setup an endpoint that fetches the 100 latest searches ordered from most searched to least searched (you decide where this should go)
 
+```mermaid
+erDiagram
+    Product ||--o{ Recommendation : "Has"
+    Cart ||--|{ Product : "Contains"
+    StatsEntry ||--o{ Product : "Includes"
+    StatsEntry ||--|{ Search : "Records"
+
+```	
+
+
 ## References
 - https://learn.microsoft.com/en-us/aspnet/core/web-api/action-return-types
 

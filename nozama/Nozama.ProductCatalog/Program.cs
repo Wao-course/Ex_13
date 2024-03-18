@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Nozama.ProductCatalog.Data;
 using Nozama.ProductCatalog.Services;
+using System.Data.Common;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services.AddDbContext<ProductCatalogDbContext>(
