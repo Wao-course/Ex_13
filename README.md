@@ -60,15 +60,15 @@ public async Task<ActionResult<IEnumerable<Product>>> SearchByName([FromQuery] s
 Implement the following in `Nozama.Recommendations`
 - Setup the background worker to poll data from `/stats` from `Nozama.ProductCatalog` and save it to it's database in 1600 milliseconds intervals
 
-    > Added StatsBackgroundworker to fetch data from the product catalog service and save it to the database. [StatsBackgroundWorker](Nozama.Recommendations/workers/statsBackgroundWorker.cs)
+    > Added StatsBackgroundworker to fetch data from the product catalog service and save it to the database. [StatsBackgroundWorker](nozama/Nozama.Recommendations/workers/statsBackgroundWorker.cs)
     
 - Add a service, that calculate the total number lookups for products (think about which microservice should implement this service)
 
-    > Added an Service to the ``Nozma.ProductCatalog`` and adding an endpoint to the statsController ``/totallookups`` to fetch the total searches(LookUps) for each product .[ProductLookupService](Nozama.ProductCatalog/Services/ProductLookupService.cs)
+    > Added an Service to the ``Nozma.ProductCatalog`` and adding an endpoint to the statsController ``/totallookups`` to fetch the total searches(LookUps) for each product .[ProductLookupService](nozama/Nozama.ProductCatalog/Services/ProductLookupService.cs)
 
 - Setup an endpoint that fetches the 100 latest searches ordered from most searched to least searched (you decide where this should go)
 
-    > Added a controller ``SearchController.cs`` that contains the endpoint ``/latestSearches`` to fetch the latest searches for each product. [SearchesController](Nozama.ProductCatalog/Controllers/Searches.controller.cs)
+    > Added a controller ``SearchController.cs`` that contains the endpoint ``/latestSearches`` to fetch the latest searches for each product. [SearchesController](nozama/Nozama.ProductCatalog/Controllers/Searches.controller.cs)
 
 
 
