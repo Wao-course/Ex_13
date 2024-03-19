@@ -19,13 +19,20 @@ docker-compose -f docker-compose.debug.yml build
 docker-compose -f docker-compose.debug.yml up -d
 ```
 
+
+
 ## Search endpoint in product catalog
 Implement a search endpoint in `Nozama.ProductCatalog`
 - You should use query strings for search values[^1]
 - You decide for what to search for: `Name`, `Description`, `ProductId`, etc. 
 - Add a couple of products and test it out!
 
-```csharp	
+<details>
+  <summary>Code</summary>
+    
+
+```csharp 
+
 [HttpGet("search")]
 [ProducesResponseType(StatusCodes.Status200OK)]
 [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -46,21 +53,24 @@ public async Task<ActionResult<IEnumerable<Product>>> SearchByName([FromQuery] s
 
 ```
 
+</details>
+
 
 ## Add a stats endpoint
 Implement the following in `Nozama.Recommendations`
 - Setup the background worker to poll data from `/stats` from `Nozama.ProductCatalog` and save it to it's database in 1600 milliseconds intervals
+
+    > Added StatsBackgroundworker to fetch data from the product catalog service and save it to the database. [StatsBackgroundWorker](Nozama.Recommendations/workers/statsBackgroundWorker.cs)
+    
 - Add a service, that calculate the total number lookups for products (think about which microservice should implement this service)
+
+    > Added an Service to the ``Nozma.ProductCatalog`` and adding an endpoint to the statsController ``/totallookups`` to fetch the total searches(LookUps) for each product .[ProductLookupService](Nozama.ProductCatalog/Services/ProductLookupService.cs)
+
 - Setup an endpoint that fetches the 100 latest searches ordered from most searched to least searched (you decide where this should go)
 
-```mermaid
-erDiagram
-    Product ||--o{ Recommendation : "Has"
-    Cart ||--|{ Product : "Contains"
-    StatsEntry ||--o{ Product : "Includes"
-    StatsEntry ||--|{ Search : "Records"
+    > Added a controller ``SearchController.cs`` that contains the endpoint ``/latestSearches`` to fetch the latest searches for each product. [SearchesController](Nozama.ProductCatalog/Controllers/Searches.controller.cs)
 
-```	
+
 
 
 ## References
