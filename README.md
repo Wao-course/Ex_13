@@ -68,7 +68,7 @@ Implement the following in `Nozama.Recommendations`
 
 - Setup an endpoint that fetches the 100 latest searches ordered from most searched to least searched (you decide where this should go)
 
-    > Added a controller ``SearchController.cs`` that contains the endpoint ``/latestSearches`` to fetch the latest searches for each product. [SearchesController](nozama/Nozama.ProductCatalog/Controllers/Searches.controller.cs)
+    > Added a controller ``SearchController.cs`` that contains the endpoint ``/latestSearches`` to fetch the latest searches for each product. [SearchesController](nozama/Nozama.ProductCatalog/Controllers/SearchesController.cs)
 
 
 
@@ -119,3 +119,6 @@ Implement the following in `Nozama.Recommendations`
 - the search list returnig empty list when the search term is not found.
 
 - The microsoft.EntityFrameworkCore.Tools.DotNet package is giving error use ```dotnet list package``` to check the version of the package and restore if it fails with the following command ```dotnet restore```
+
+- Scope issue with the recommendationDbContext in the StatsBackgroundWorker class.fix: requires using a factory scope 
+- issues with the migration solved with ``dotnet ef migration add <migration name>``  and ``dotnet ef database update``

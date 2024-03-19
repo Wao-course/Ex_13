@@ -69,24 +69,44 @@ public class CatalogController : ControllerBase
           .AsNoTracking()
           .Where(p => p.Name.Contains(name))
           .ToListAsync();
+      
+      if (products.Any())
+        {
+            try
+            {
+                // Log the search query
+                await LogSearch(name);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Product Doesn't Exist");
+            }
+        }
 
       return Ok(products);
   }
   
-  [NonAction]
-  public async Task LogSearch(string searchTerm)
-  {
-      // Create a new Search object with the search term and timestamp
-      var search = new Search
-      {
-          Term = searchTerm,
-          Timestamp = DateTimeOffset.Now
-      };
+[NonAction]
+public async Task LogSearch(string searchTerm)
+{
+    var product = await _dbContext.Products
+        .FirstOrDefaultAsync(p => p.Name.Contains(searchTerm));
 
-      // Add the search object to the database context
-      _dbContext.Searches.Add(search);
+    if (product != null)
+    {
+        // Create a new Search object with the search term, productId, and timestamp
+        var search = new Search
+        {
+            Term = searchTerm,
+            ProductId = product.ProductId,
+            Timestamp = DateTimeOffset.Now
+        };
 
-      // Save changes to the database asynchronously
-      await _dbContext.SaveChangesAsync();
-  }
+        // Add the search object to the database context
+        _dbContext.Searches.Add(search);
+
+        // Save changes to the database asynchronously
+        await _dbContext.SaveChangesAsync();
+    }
+}
 }

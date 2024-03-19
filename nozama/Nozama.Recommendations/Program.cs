@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Nozama.Recommendations.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient<ProductCatalogService>();
+builder.Services.AddScoped<ProductLookupService>(); // AddScoped is just one option; use the appropriate lifetime for your scenario
 builder.Services.AddHostedService<LastestSearchesBackgroundWorker>();
 builder.Services.AddHostedService<StatsBackgroundWorker>();
+builder.Services.AddControllers();
 
 builder.Services.AddDbContextFactory<RecommendationsDbContext>(
     options => options.UseSqlServer(Environment.GetEnvironmentVariable("CONNECTION_STRING"))
@@ -25,5 +28,6 @@ using(var scope = app.Services.CreateScope()) {
 }
 
 app.MapGet("/", () => "Main page of the Recommendations service");
+app.MapControllers();
 
 app.Run();
