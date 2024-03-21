@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Nozama.ProductCatalog.Services;
 using Nozama.ProductCatalog.Data;
 using Nozama.Model;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +9,10 @@ namespace Nozama.ProductCatalog.Controllers
   [Route("[controller]")]
   public class StatsController : ControllerBase
   {
-    private readonly ProductLookupService _productLookupService;
     private readonly ProductCatalogDbContext _dbContext;
 
-    public StatsController(ProductLookupService productLookupService, ProductCatalogDbContext dbContext)
+    public StatsController(ProductCatalogDbContext dbContext)
     {
-      _productLookupService = productLookupService;
       _dbContext = dbContext;
     }
 
@@ -58,20 +55,5 @@ namespace Nozama.ProductCatalog.Controllers
       return Created($"{recommendation.RecommendationId}", recommendation);
     }
 
-
-    [HttpGet("totallookups")]
-    public ActionResult<int> GetTotalProductLookups()
-    {
-      Console.WriteLine("Getting total product lookups");
-      try
-      {
-        var totalLookups = _productLookupService.CalculateTotalProductLookups();
-        return Ok(totalLookups);
-      }
-      catch (Exception ex)
-      {
-        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-      }
-    }
   }
 }

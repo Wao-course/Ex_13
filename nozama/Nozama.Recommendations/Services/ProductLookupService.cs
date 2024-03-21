@@ -37,24 +37,5 @@ namespace Nozama.Recommendations.Services
 
             return totalLookups;
         }
-
-        // public async Task<Dictionary<int, int>> GetTotalLookupsForProducts()
-        // {
-        //     var totalLookups = new Dictionary<int, int>();
-
-        //     // Query the database to get the total number of lookups for each product
-        //     var products = await _dbContext.Products.ToListAsync();
-
-        //     foreach (var product in products)
-        //     {
-        //         var totalLookupCount = await _dbContext.Searches
-        //             .CountAsync(s => s.ProductId == product.ProductId);
-                
-        //         // Add the product ID and its total lookup count to the dictionary
-        //         totalLookups.Add(product.ProductId, totalLookupCount);
-        //     }
-
-        //     return totalLookups;
-        // }
     }
 }

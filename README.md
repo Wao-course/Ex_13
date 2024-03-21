@@ -27,33 +27,34 @@ Implement a search endpoint in `Nozama.ProductCatalog`
 - You decide for what to search for: `Name`, `Description`, `ProductId`, etc. 
 - Add a couple of products and test it out!
 
-<details>
-  <summary>Code</summary>
     
+    <details>
+        <summary>Code</summary>
+            
 
-```csharp 
+        ```csharp 
 
-[HttpGet("search")]
-[ProducesResponseType(StatusCodes.Status200OK)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-public async Task<ActionResult<IEnumerable<Product>>> SearchByName([FromQuery] string name)
-{
-    if (string.IsNullOrWhiteSpace(name))
-    {
-        return BadRequest("Search term cannot be empty.");
-    }
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<Product>>> SearchByName([FromQuery] string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest("Search term cannot be empty.");
+            }
 
-    var products = await _dbContext.Products
-        .AsNoTracking()
-        .Where(p => p.Name.Contains(name))
-        .ToListAsync();
+            var products = await _dbContext.Products
+                .AsNoTracking()
+                .Where(p => p.Name.Contains(name))
+                .ToListAsync();
 
-    return Ok(products);
-}
+            return Ok(products);
+        }
 
-```
+        ```
 
-</details>
+    </details>
 
 
 ## Add a stats endpoint
